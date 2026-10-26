@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${committee.id == null ? 'Add Committee' : 'Edit Committee'})}"></head>
+<body>
+<div class="app">
+    <div th:replace="~{fragments/layout :: sidebar('committees')}"></div>
+
+    <main class="main">
+        <a th:href="@{/committees}" class="back-link">
+            <svg class="i i-sm"><use href="#i-arrow-left"/></svg> Back to Committees</a>
+
+        <div class="page-head">
+            <div>
+                <div class="crumb">Committees / <span th:text="${committee.id == null ? 'New' : 'Edit'}">New</span></div>
+                <h1 class="page-title" th:text="${committee.id == null ? 'Add Committee' : 'Edit Committee'}">Add Committee</h1>
+                <p class="page-sub">Enter the committee details below.</p>
+            </div>
+        </div>
+
+        <div class="card card-pad form-card form-narrow">
+            <form th:action="${committee.id == null ? '/committees/save' : '/committees/update'}"
+                  th:object="${committee}" method="post">
+
+                <input type="hidden" th:field="*{id}">
+
+                <div class="form-grid" style="grid-template-columns:1fr">
+                    <div class="field">
+                        <label for="name">Committee Code <span class="req">*</span></label>
+                        <input type="text" id="name" th:field="*{name}" class="input"
+                               placeholder="e.g. UNGA" required maxlength="100">
+                    </div>
+
+                    <div class="field">
+                        <label for="fullName">Full Committee Name <span class="req">*</span></label>
+                        <input type="text" id="fullName" th:field="*{fullName}" class="input"
+                               placeholder="e.g. United Nations General Assembly" required maxlength="200">
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        <svg class="i i-sm"><use href="#i-check"/></svg>
+                        <span th:text="${committee.id == null ? 'Add Committee' : 'Update Committee'}">Add Committee</span>
+                    </button>
+                    <a th:href="@{/committees}" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </main>
+</div>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Edit Delegate')}"></head>
+<body>
+<div class="app">
+    <div th:replace="~{fragments/layout :: sidebar('delegates')}"></div>
+
+    <main class="main">
+        <a th:href="@{/delegates}" class="back-link">
+            <svg class="i i-sm"><use href="#i-arrow-left"/></svg> Back to Delegates</a>
+
+        <div class="page-head">
+            <div>
+                <div class="crumb">Delegates / Edit</div>
+                <h1 class="page-title">Edit Delegate</h1>
+                <p class="page-sub">Update the participant's information.</p>
+            </div>
+        </div>
+
+        <div th:if="${error}" class="alert alert-danger form-card">
+            <svg class="i"><use href="#i-alert"/></svg><span th:text="${error}"></span>
+        </div>
+
+        <div class="card card-pad form-card">
+            <form action="/delegates/update" method="post" th:object="${delegate}">
+                <input type="hidden" th:field="*{id}">
+
+                <div class="form-grid">
+                    <div class="field">
+                        <label for="fullName">Full Name <span class="req">*</span></label>
+                        <input type="text" id="fullName" th:field="*{fullName}" class="input"
+                               maxlength="100" required placeholder="e.g. Aarav Sharma">
+                    </div>
+
+                    <div class="field">
+                        <label for="email">Email Address <span class="req">*</span></label>
+                        <input type="email" id="email" th:field="*{email}" class="input"
+                               maxlength="150" required placeholder="name@college.edu">
+                    </div>
+
+                    <div class="field">
+                        <label for="college">College / Institution <span class="req">*</span></label>
+                        <input type="text" id="college" th:field="*{college}" class="input"
+                               maxlength="150" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" th:field="*{phone}" class="input" maxlength="20">
+                    </div>
+
+<div class="field">
+    <label for="countryId">Assigned Country</label>
+    <select id="countryId" th:field="*{countryId}" class="input">
+        <option value="">Select Country</option>
+        <option th:each="country : ${countries}"
+                th:value="${country.id}"
+                th:text="${country.name}">
+        </option>
+    </select>
+</div>
+
+<div class="field">
+    <label for="committeeId">Committee</label>
+    <select id="committeeId" th:field="*{committeeId}" class="input">
+        <option value="">Select Committee</option>
+        <option th:each="committee : ${committees}"
+                th:value="${committee.id}"
+                th:text="${committee.name}">
+        </option>
+    </select>
+</div>
+
+
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        <svg class="i i-sm"><use href="#i-check"/></svg> Save Changes</button>
+                    <a th:href="@{/delegates}" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </main>
+</div>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

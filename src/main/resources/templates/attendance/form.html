@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${attendance.id == null ? 'Mark Attendance' : 'Edit Attendance'})}"></head>
+<body>
+<div class="app">
+    <div th:replace="~{fragments/layout :: sidebar('attendance')}"></div>
+
+    <main class="main">
+        <a th:href="@{/attendance}" class="back-link">
+            <svg class="i i-sm"><use href="#i-arrow-left"/></svg> Back to Attendance</a>
+
+        <div class="page-head">
+            <div>
+                <div class="crumb">Attendance / <span th:text="${attendance.id == null ? 'New' : 'Edit'}">New</span></div>
+                <h1 class="page-title" th:text="${attendance.id == null ? 'Mark Attendance' : 'Edit Attendance'}">Mark Attendance</h1>
+                <p class="page-sub">Enter the delegate's attendance details.</p>
+            </div>
+        </div>
+
+        <div class="card card-pad form-card form-narrow">
+            <div class="alert alert-error" th:if="${error != null}" role="alert"> <span th:text="${error}"></span> </div>
+            <form th:action="${attendance.id == null ? '/attendance/save' : '/attendance/update'}"
+                  th:object="${attendance}" method="post">
+
+                <input type="hidden" th:field="*{id}">
+
+                <div class="form-grid" style="grid-template-columns:1fr">
+                    <div class="field">
+                        <label for="delegateId">Delegate <span class="req">*</span></label>
+                        <select th:field="*{delegateId}" id="delegateId" class="input" required>
+                            <option value="">Select a delegate</option>
+                            <option th:each="delegate : ${delegates}"
+                                    th:value="${delegate.id}"
+                                    th:text="${delegate.full_name}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label for="attendanceDate">Attendance Date <span class="req">*</span></label>
+                        <input type="date" id="attendanceDate" th:field="*{attendanceDate}" class="input" required>
+                    </div>
+
+                    <div class="field">
+                        <span class="label">Status <span class="req">*</span></span>
+                        <div class="segmented">
+                            <input type="radio" id="statusPresent" th:field="*{status}" value="Present" required>
+                            <label for="statusPresent" class="seg-present">
+                                <svg class="i i-sm"><use href="#i-check"/></svg> Present</label>
+                            <input type="radio" id="statusAbsent" th:field="*{status}" value="Absent" required>
+                            <label for="statusAbsent" class="seg-absent">
+                                <svg class="i i-sm"><use href="#i-x"/></svg> Absent</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        <svg class="i i-sm"><use href="#i-check"/></svg>
+                        <span th:text="${attendance.id == null ? 'Save Attendance' : 'Update Attendance'}">Save Attendance</span>
+                    </button>
+                    <a th:href="@{/attendance}" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </main>
+</div>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

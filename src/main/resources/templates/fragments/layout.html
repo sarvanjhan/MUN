@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title} + ' | MUN Manager'">MUN Manager</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+
+<div class="shell" th:fragment="sidebar(active)">
+
+
+<svg class="sprite" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></symbol>
+    <symbol id="i-landmark" viewBox="0 0 24 24"><path d="M3 22h18"/><path d="M6 18v-7"/><path d="M10 18v-7"/><path d="M14 18v-7"/><path d="M18 18v-7"/><path d="M12 2 20 7H4z"/></symbol>
+    <symbol id="i-check-circle" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 16v-5"/><path d="M12 16V7"/><path d="M17 16v-3"/></symbol>
+    <symbol id="i-logout" viewBox="0 0 24 24"><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/><path d="M12 3h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-6"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+</svg>
+
+<div class="mobile-bar">
+    <button type="button" class="menu-btn" data-nav-toggle aria-label="Open menu">
+        <svg class="i"><use href="#i-menu"/></svg>
+    </button>
+    <b>MUN Manager</b>
+</div>
+
+<div class="overlay" data-nav-toggle></div>
+
+<aside class="sidebar">
+    <div class="brand">
+        <div class="brand-mark">
+            <svg class="i"><use href="#i-globe"/></svg>
+        </div>
+        <div class="brand-name">MUN Manager<small>Delegation System</small></div>
+    </div>
+
+    <div class="nav-label">WORKSPACE</div>
+
+    <nav class="nav">
+        <a th:href="@{/}" th:classappend="${active == 'dashboard'} ? 'active'">
+            <svg class="i"><use href="#i-grid"/></svg> Dashboard
+        </a>
+        <a th:href="@{/delegates}" th:classappend="${active == 'delegates'} ? 'active'">
+            <svg class="i"><use href="#i-users"/></svg> Delegates
+        </a>
+        <a th:href="@{/countries}" th:classappend="${active == 'countries'} ? 'active'">
+            <svg class="i"><use href="#i-globe"/></svg> Countries
+        </a>
+        <a th:href="@{/committees}" th:classappend="${active == 'committees'} ? 'active'">
+            <svg class="i"><use href="#i-landmark"/></svg> Committees
+        </a>
+        <a th:href="@{/attendance}" th:classappend="${active == 'attendance'} ? 'active'">
+            <svg class="i"><use href="#i-check-circle"/></svg> Attendance
+        </a>
+        <a th:href="@{/reports}" th:classappend="${active == 'reports'} ? 'active'">
+            <svg class="i"><use href="#i-chart"/></svg> Reports
+        </a>
+    </nav>
+
+    <div class="sidebar-footer">
+        <form th:action="@{/logout}" method="post" style="margin-bottom: 16px;">
+            <button type="submit"
+                    style="display:flex; align-items:center; justify-content:center; gap:10px; width:100%; padding:11px 14px; border:1px solid #fecaca; border-radius:8px; background:#fee2e2; color:#b91c1c; font-family:inherit; font-size:14px; font-weight:600; cursor:pointer;">
+                <svg class="i" style="width:17px;height:17px;"><use href="#i-logout"/></svg>
+                Logout
+            </button>
+        </form>
+        <strong>MUN Delegation Management</strong>
+        Academic Project
+    </div>
+</aside>
+
+
+</div>
+
+<th:block th:fragment="scripts"> <script th:src="@{/js/app.js}"></script>
+</th:block>
+
+</body>
+</html>

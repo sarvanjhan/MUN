@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Attendance Management')}"></head>
+<body>
+<div class="app">
+    <div th:replace="~{fragments/layout :: sidebar('attendance')}"></div>
+
+    <main class="main">
+        <div class="page-head">
+            <div>
+                <div class="crumb">MUN Administration</div>
+                <h1 class="page-title">Attendance Management</h1>
+                <p class="page-sub">Record and manage delegate attendance.</p>
+            </div>
+            <div class="head-actions">
+                <a th:href="@{/attendance/new}" class="btn btn-primary">
+                    <svg class="i i-sm"><use href="#i-plus"/></svg> Mark Attendance</a>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="toolbar">
+                <span class="count">
+                    <b th:text="${#lists.size(attendanceList)}">0</b> records ·
+                    <span class="badge badge-present" style="margin-left:4px">
+                        <span class="dot"></span><span th:text="${#lists.size(attendanceList.?[status == 'Present'])} + ' Present'">0 Present</span></span>
+                    <span class="badge badge-absent" style="margin-left:4px">
+                        <span class="dot"></span><span th:text="${#lists.size(attendanceList.?[status == 'Absent'])} + ' Absent'">0 Absent</span></span>
+                </span>
+                <div class="search" th:unless="${#lists.isEmpty(attendanceList)}">
+                    <svg class="i"><use href="#i-search"/></svg>
+                    <input type="search" class="input" placeholder="Search attendance…"
+                           data-filter="#attendanceTable" data-empty="#attendanceNoResults" aria-label="Search attendance">
+                </div>
+            </div>
+
+            <div class="table-wrap" th:unless="${#lists.isEmpty(attendanceList)}">
+                <table class="data" id="attendanceTable">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Delegate</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th class="col-actions">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="record : ${attendanceList}" data-row>
+                        <td class="col-id" th:text="${record.id}"></td>
+                        <td><b th:text="${record.delegateName}"></b></td>
+                        <td th:text="${record.attendanceDate}"></td>
+                        <td>
+                            <span class="badge"
+                                  th:classappend="${record.status == 'Present'} ? 'badge-present' : (${record.status == 'Absent'} ? 'badge-absent' : 'badge-other')">
+                                <svg class="i i-sm" th:if="${record.status == 'Present'}"><use href="#i-check"/></svg>
+                                <svg class="i i-sm" th:if="${record.status == 'Absent'}"><use href="#i-x"/></svg>
+                                <span th:text="${record.status}"></span>
+                            </span>
+                        </td>
+                        <td class="col-actions">
+                            <div class="row-actions">
+                                <a th:href="@{/attendance/edit/{id}(id=${record.id})}" class="btn btn-sm btn-edit">
+                                    <svg class="i i-sm"><use href="#i-pencil"/></svg> Edit</a>
+                                <form th:action="@{/attendance/delete/{id}(id=${record.id})}" method="post"
+                                      onsubmit="return confirm('Delete this attendance record?')">
+                                    <button type="submit" class="btn btn-sm btn-delete">
+                                        <svg class="i i-sm"><use href="#i-trash"/></svg> Delete</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="no-results" id="attendanceNoResults">No records match your search.</div>
+            </div>
+
+            <div class="empty" th:if="${#lists.isEmpty(attendanceList)}">
+                <div class="empty-icon"><svg class="i"><use href="#i-check-circle"/></svg></div>
+                <h3>No attendance records found</h3>
+                <p>Click "Mark Attendance" to add one.</p>
+                <a th:href="@{/attendance/new}" class="btn btn-primary">
+                    <svg class="i i-sm"><use href="#i-plus"/></svg> Mark Attendance</a>
+            </div>
+        </div>
+
+        <div class="footer-text">MUN Manager · Delegation Management System</div>
+    </main>
+</div>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

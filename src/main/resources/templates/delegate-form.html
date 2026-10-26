@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Register Delegate')}"></head>
+<body>
+<div class="app">
+    <div th:replace="~{fragments/layout :: sidebar('delegates')}"></div>
+
+
+<main class="main">
+    <a th:href="@{/delegates}" class="back-link">
+        <svg class="i i-sm"><use href="#i-arrow-left"/></svg> Back to Delegates
+    </a>
+
+    <div class="page-head">
+        <div>
+            <div class="crumb">Delegates / New</div>
+            <h1 class="page-title">Register Delegate</h1>
+            <p class="page-sub">Enter the participant's information below.</p>
+        </div>
+    </div>
+
+    <div th:if="${error}" class="alert alert-danger form-card">
+        <svg class="i"><use href="#i-alert"/></svg>
+        <span th:text="${error}"></span>
+    </div>
+
+    <div class="card card-pad form-card">
+        <form th:action="@{/delegates/save}" method="post" th:object="${delegate}">
+            <div class="form-grid">
+
+                <div class="field">
+                    <label for="fullName">Full Name <span class="req">*</span></label>
+                    <input type="text" id="fullName" th:field="*{fullName}" class="input"
+                           maxlength="100" required placeholder="e.g. Aarav Sharma">
+                    <small class="text-danger"
+                           th:if="${#fields.hasErrors('fullName')}"
+                           th:errors="*{fullName}"></small>
+                </div>
+
+                <div class="field">
+                    <label for="email">Email Address <span class="req">*</span></label>
+                    <input type="email" id="email" th:field="*{email}" class="input"
+                           maxlength="150" required placeholder="name@college.edu">
+                    <small class="text-danger"
+                           th:if="${#fields.hasErrors('email')}"
+                           th:errors="*{email}"></small>
+                </div>
+
+                <div class="field">
+                    <label for="college">College / Institution <span class="req">*</span></label>
+                    <input type="text" id="college" th:field="*{college}" class="input"
+                           maxlength="150" required>
+                    <small class="text-danger"
+                           th:if="${#fields.hasErrors('college')}"
+                           th:errors="*{college}"></small>
+                </div>
+
+                <div class="field">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" th:field="*{phone}" class="input"
+                           maxlength="20" placeholder="10-digit mobile number">
+                    <small class="text-danger"
+                           th:if="${#fields.hasErrors('phone')}"
+                           th:errors="*{phone}"></small>
+                </div>
+
+                
+<div class="field">
+    <label for="countryId">Assigned Country</label>
+    <select id="countryId" th:field="*{countryId}" class="input">
+        <option value="">Select Country</option>
+        <option th:each="country : ${countries}"
+                th:value="${country.id}"
+                th:text="${country.name}">
+        </option>
+    </select>
+</div>
+
+
+<div class="field">
+    <label for="committeeId">Committee</label>
+    <select id="committeeId" th:field="*{committeeId}" class="input">
+        <option value="">Select Committee</option>
+        <option th:each="committee : ${committees}"
+                th:value="${committee.id}"
+                th:text="${committee.name}">
+        </option>
+    </select>
+</div>
+
+
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    <svg class="i i-sm"><use href="#i-check"/></svg>
+                    Register Delegate
+                </button>
+                <a th:href="@{/delegates}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</main>
+
+
+</div>
+
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+
+</body>
+</html>

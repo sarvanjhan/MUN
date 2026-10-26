@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Dashboard')}"></head>
+<body>
+<div class="app">
+    <div th:replace="~{fragments/layout :: sidebar('dashboard')}"></div>
+
+    <main class="main">
+        <div class="page-head">
+            <div>
+                <div class="crumb">Workspace / Overview</div>
+                <h1 class="page-title">Dashboard</h1>
+                <p class="page-sub">Welcome back. Here's an overview of your MUN administration.</p>
+            </div>
+            <div class="head-actions">
+                <a th:href="@{/delegates/new}" class="btn btn-primary">
+                    <svg class="i i-sm"><use href="#i-plus"/></svg> Register Delegate
+                </a>
+            </div>
+        </div>
+
+        <section class="stat-grid">
+            <div class="card stat-card">
+                <div class="stat-top">
+                    <span class="stat-label">Total Delegates</span>
+                    <div class="stat-icon tone-blue"><svg class="i"><use href="#i-users"/></svg></div>
+                </div>
+                <div class="stat-number" th:text="${totalDelegates}">0</div>
+                <div class="stat-caption">Registered participants</div>
+            </div>
+
+            <div class="card stat-card">
+                <div class="stat-top">
+                    <span class="stat-label">Committees</span>
+                    <div class="stat-icon tone-violet"><svg class="i"><use href="#i-landmark"/></svg></div>
+                </div>
+                <div class="stat-number" th:text="${totalCommittees}">0</div>
+                <div class="stat-caption">Available committees</div>
+            </div>
+
+            <div class="card stat-card">
+                <div class="stat-top">
+                    <span class="stat-label">Countries</span>
+                    <div class="stat-icon tone-green"><svg class="i"><use href="#i-globe"/></svg></div>
+                </div>
+                <div class="stat-number" th:text="${totalCountries}">0</div>
+                <div class="stat-caption">Available allocations</div>
+            </div>
+
+            <div class="card stat-card">
+                <div class="stat-top">
+                    <span class="stat-label">Attendance</span>
+                    <div class="stat-icon tone-amber"><svg class="i"><use href="#i-check-circle"/></svg></div>
+                </div>
+                <div class="stat-number" th:text="${attendancePercentage + '%'}">0%</div>
+                <div class="meter green" style="margin-top:10px">
+                    <i th:style="'width:' + ${#strings.replace(attendancePercentage, ',', '.')} + '%'"></i>
+                </div>
+                <div class="stat-caption">Overall recorded attendance</div>
+            </div>
+        </section>
+
+        <section class="grid-2">
+            <div class="card card-pad">
+                <div class="card-title">Quick access</div>
+                <p class="card-sub">Jump straight to the tools you use most.</p>
+
+                <div class="quick-grid">
+                    <a class="quick" th:href="@{/delegates}">
+                        <div class="stat-icon tone-blue"><svg class="i"><use href="#i-users"/></svg></div>
+                        <div><b>Manage Delegates</b><span class="s">Register and edit participants</span></div>
+                        <svg class="i i-sm go"><use href="#i-arrow-right"/></svg>
+                    </a>
+                    <a class="quick" th:href="@{/countries}">
+                        <div class="stat-icon tone-green"><svg class="i"><use href="#i-globe"/></svg></div>
+                        <div><b>Manage Countries</b><span class="s">Allocations and regions</span></div>
+                        <svg class="i i-sm go"><use href="#i-arrow-right"/></svg>
+                    </a>
+                    <a class="quick" th:href="@{/committees}">
+                        <div class="stat-icon tone-violet"><svg class="i"><use href="#i-landmark"/></svg></div>
+                        <div><b>View Committees</b><span class="s">Councils and assemblies</span></div>
+                        <svg class="i i-sm go"><use href="#i-arrow-right"/></svg>
+                    </a>
+                    <a class="quick" th:href="@{/attendance}">
+                        <div class="stat-icon tone-amber"><svg class="i"><use href="#i-check-circle"/></svg></div>
+                        <div><b>Track Attendance</b><span class="s">Mark present or absent</span></div>
+                        <svg class="i i-sm go"><use href="#i-arrow-right"/></svg>
+                    </a>
+                </div>
+            </div>
+
+            <div class="card card-pad">
+                <div class="card-title" style="margin-bottom:14px">System overview</div>
+                <span class="status-chip"><span class="dot"></span> Application online</span>
+
+                <div style="margin-top:12px">
+                    <div class="overview-row"><span>Delegates</span><b th:text="${totalDelegates}">0</b></div>
+                    <div class="overview-row"><span>Committees</span><b th:text="${totalCommittees}">0</b></div>
+                    <div class="overview-row"><span>Countries</span><b th:text="${totalCountries}">0</b></div>
+                    <div class="overview-row"><span>Attendance rate</span><b th:text="${attendancePercentage + '%'}">0%</b></div>
+                </div>
+
+                <a th:href="@{/reports}" class="btn btn-secondary btn-sm" style="margin-top:14px">
+                    View full report <svg class="i i-sm"><use href="#i-arrow-right"/></svg>
+                </a>
+            </div>
+        </section>
+
+        <div class="footer-text">MUN Manager · Delegation Management System · Academic Project</div>
+    </main>
+</div>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

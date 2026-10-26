@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${country.id == null ? 'Add Country' : 'Edit Country'})}"></head>
+<body>
+<div class="app">
+    <div th:replace="~{fragments/layout :: sidebar('countries')}"></div>
+
+    <main class="main">
+        <a th:href="@{/countries}" class="back-link">
+            <svg class="i i-sm"><use href="#i-arrow-left"/></svg> Back to Countries</a>
+
+        <div class="page-head">
+            <div>
+                <div class="crumb">Countries / <span th:text="${country.id == null ? 'New' : 'Edit'}">New</span></div>
+                <h1 class="page-title" th:text="${country.id == null ? 'Add Country' : 'Edit Country'}">Add Country</h1>
+                <p class="page-sub">Enter the country details below.</p>
+            </div>
+        </div>
+
+        <div th:if="${error}" class="alert alert-danger" role="alert">
+            <svg class="i"><use href="#i-alert"/></svg>
+            <span th:text="${error}">This country is already registered.</span>
+        </div>
+
+        <div class="card card-pad form-card form-narrow">
+            <form th:action="${country.id == null ? '/countries/save' : '/countries/update'}"
+                  th:object="${country}" method="post">
+
+                <input type="hidden" th:field="*{id}">
+
+                <div class="form-grid" style="grid-template-columns:1fr">
+                    <div class="field">
+                        <label for="name">Country Name <span class="req">*</span></label>
+                        <input type="text" id="name" th:field="*{name}" class="input"
+                               placeholder="e.g. India" required maxlength="100">
+                    </div>
+
+                    <div class="field">
+                        <label for="region">Region <span class="req">*</span></label>
+                        <input type="text" id="region" th:field="*{region}" class="input"
+                               placeholder="e.g. Asia" required maxlength="100">
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        <svg class="i i-sm"><use href="#i-check"/></svg>
+                        <span th:text="${country.id == null ? 'Add Country' : 'Update Country'}">Add Country</span>
+                    </button>
+                    <a th:href="@{/countries}" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </main>
+</div>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>
+

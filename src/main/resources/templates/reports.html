@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Reports')}"></head>
+<body>
+<div class="app">
+    <div th:replace="~{fragments/layout :: sidebar('reports')}"></div>
+
+<main class="main">
+
+    <div class="report-header">
+        <h1>MUN Manager — Delegation Report</h1>
+        <p>Summary of registered delegates, countries, committees and attendance.</p>
+    </div>
+
+    <div class="page-head no-print">
+        <div>
+            <div class="crumb">MUN Administration</div>
+            <h1 class="page-title">MUN Reports</h1>
+            <p class="page-sub">Overview of delegation management statistics.</p>
+        </div>
+        <div class="head-actions">
+            <button type="button" onclick="window.print()" class="btn btn-primary">
+                <svg class="i i-sm"><use href="#i-printer"/></svg>
+                Print Report
+            </button>
+        </div>
+    </div>
+
+    <!-- Overall Statistics -->
+    <section class="stat-grid cols-3">
+        <div class="card stat-card">
+            <div class="stat-top">
+                <span class="stat-label">Total Delegates</span>
+                <div class="stat-icon tone-blue">
+                    <svg class="i"><use href="#i-users"/></svg>
+                </div>
+            </div>
+            <div class="stat-number" th:text="${totalDelegates}">0</div>
+        </div>
+
+        <div class="card stat-card">
+            <div class="stat-top">
+                <span class="stat-label">Total Countries</span>
+                <div class="stat-icon tone-green">
+                    <svg class="i"><use href="#i-globe"/></svg>
+                </div>
+            </div>
+            <div class="stat-number" th:text="${totalCountries}">0</div>
+        </div>
+
+        <div class="card stat-card">
+            <div class="stat-top">
+                <span class="stat-label">Total Committees</span>
+                <div class="stat-icon tone-violet">
+                    <svg class="i"><use href="#i-landmark"/></svg>
+                </div>
+            </div>
+            <div class="stat-number" th:text="${totalCommittees}">0</div>
+        </div>
+    </section>
+
+    <!-- Overall Attendance Summary -->
+    <section class="card card-pad" style="margin-bottom:18px">
+        <div class="card-title" style="margin-bottom:18px">
+            Overall Attendance Summary
+        </div>
+
+        <div class="stat-grid cols-3" style="margin-bottom:22px">
+            <div>
+                <div class="stat-label">Present Records</div>
+                <div class="stat-number"
+                     style="color:var(--green)"
+                     th:text="${presentCount}">0</div>
+            </div>
+
+            <div>
+                <div class="stat-label">Absent Records</div>
+                <div class="stat-number"
+                     style="color:var(--red)"
+                     th:text="${absentCount}">0</div>
+            </div>
+
+            <div>
+                <div class="stat-label">Overall Attendance</div>
+                <div class="stat-number"
+                     th:text="${attendancePercentage + '%'}">0%</div>
+            </div>
+        </div>
+
+        <div class="meter green">
+            <i th:style="'width:' + ${#strings.replace(attendancePercentage, ',', '.')} + '%'"></i>
+        </div>
+    </section>
+
+    <!-- Individual Attendance Report -->
+    <section class="card card-pad" style="margin-bottom:18px">
+        <div class="card-title" style="margin-bottom:8px">
+            Individual Attendance Report
+        </div>
+
+        <p class="card-sub" style="margin-bottom:18px">
+            View each delegate's attendance records and attendance percentage.
+        </p>
+
+        <div class="table-wrap"
+             th:if="${not #lists.isEmpty(delegateAttendance)}">
+
+            <table class="data">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Delegate</th>
+                    <th>Present</th>
+                    <th>Absent</th>
+                    <th>Total Records</th>
+                    <th>Attendance %</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="record : ${delegateAttendance}">
+                    <td class="col-id"
+                        th:text="${record['ID']}">1</td>
+
+                    <td>
+                        <b th:text="${record['FULL_NAME']}">Delegate Name</b>
+                    </td>
+
+                    <td th:text="${record['PRESENT_RECORDS']}">0</td>
+
+                    <td th:text="${record['ABSENT_RECORDS']}">0</td>
+
+                    <td th:text="${record['TOTAL_RECORDS']}">0</td>
+
+                    <td>
+                        <span class="badge"
+                              th:classappend="${record['ATTENDANCE_PERCENTAGE'] >= 75} ? 'badge-present' : 'badge-absent'"
+                              th:text="${#numbers.formatDecimal(record['ATTENDANCE_PERCENTAGE'], 1, 1) + '%'}">
+                            0.0%
+                        </span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="empty"
+             th:if="${#lists.isEmpty(delegateAttendance)}">
+            <div class="empty-icon">
+                <svg class="i"><use href="#i-users"/></svg>
+            </div>
+            <h3>No delegates registered</h3>
+            <p>Register delegates to generate the individual attendance report.</p>
+        </div>
+
+        <p class="card-sub" style="margin-top:16px">
+            Attendance percentage = (Present Records / Total Attendance Records) × 100.
+            Delegates with no attendance records are shown as 0.0%.
+        </p>
+    </section>
+
+    <!-- Report Information -->
+    <section class="card card-pad">
+        <div class="card-title">Report Information</div>
+        <p class="card-sub" style="max-width:70ch">
+            This report summarizes registered delegates, available countries,
+            committees, overall attendance, and individual attendance percentages.
+            The statistics are retrieved directly from the application's database.
+        </p>
+    </section>
+
+    <!-- Navigation -->
+    <div class="head-actions no-print" style="margin-top:22px">
+        <a th:href="@{/}" class="btn btn-secondary">
+            <svg class="i i-sm"><use href="#i-arrow-left"/></svg>
+            Back to Dashboard
+        </a>
+
+        <a th:href="@{/delegates}" class="btn btn-secondary">
+            View Delegates
+        </a>
+
+        <a th:href="@{/attendance}" class="btn btn-secondary">
+            View Attendance
+        </a>
+    </div>
+
+    <div class="footer-text">MUN Manager · Delegation Management System</div>
+</main>
+
+
+</div>
+
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+
+</body>
+</html>

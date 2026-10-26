@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Delegates')}"></head>
+<body>
+<div class="app">
+    <div th:replace="~{fragments/layout :: sidebar('delegates')}"></div>
+
+    <main class="main">
+        <div class="page-head">
+            <div>
+                <div class="crumb">MUN Administration</div>
+                <h1 class="page-title">Delegate Management</h1>
+                <p class="page-sub">Register and manage MUN participants.</p>
+            </div>
+            <div class="head-actions">
+                <a th:href="@{/delegates/new}" class="btn btn-primary">
+                    <svg class="i i-sm"><use href="#i-plus"/></svg> Register Delegate
+                </a>
+            </div>
+        </div>
+
+        <div th:if="${success}" class="alert alert-success">
+            <svg class="i"><use href="#i-check"/></svg><span th:text="${success}"></span>
+        </div>
+        <div th:if="${error}" class="alert alert-danger">
+            <svg class="i"><use href="#i-alert"/></svg><span th:text="${error}"></span>
+        </div>
+
+        <div class="card">
+            <div class="toolbar">
+                <span class="count"><b th:text="${#lists.size(delegates)}">0</b> delegates registered</span>
+                <div class="search" th:unless="${#lists.isEmpty(delegates)}">
+                    <svg class="i"><use href="#i-search"/></svg>
+                    <input type="search" class="input" placeholder="Search delegates…"
+                           data-filter="#delegateTable" data-empty="#delegateNoResults" aria-label="Search delegates">
+                </div>
+            </div>
+
+            <div class="table-wrap" th:unless="${#lists.isEmpty(delegates)}">
+                <table class="data" id="delegateTable">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Delegate</th>
+                        <th>Email</th>
+                        <th>College</th>
+                        <th>Country</th>
+                        <th>Committee</th>
+                        <th>Registration Date</th>
+                        <th class="col-actions">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="d : ${delegates}" data-row>
+                        <td class="col-id" th:text="${d.id}"></td>
+                        <td>
+                            <div class="person">
+                                <div class="avatar"
+                                     th:text="${d.fullName != null and !#strings.isEmpty(d.fullName)} ? ${#strings.toUpperCase(#strings.substring(d.fullName, 0, 1))} : '?'">A</div>
+                                <div>
+                                    <b th:text="${d.fullName}"></b>
+                                    <span class="muted small" th:if="${d.phone != null and !#strings.isEmpty(d.phone)}" th:text="${d.phone}"></span>
+                                </div>
+                            </div>
+                        </td>
+                        <td th:text="${d.email}"></td>
+                        <td th:text="${d.college}"></td>
+                        <td>
+                            <span class="pill" th:if="${d.country != null and !#strings.isEmpty(d.country)}" th:text="${d.country}"></span>
+                            <span class="muted" th:unless="${d.country != null and !#strings.isEmpty(d.country)}">—</span>
+                        </td>
+                        <td>
+                            <span class="pill pill-violet" th:if="${d.committee != null and !#strings.isEmpty(d.committee)}" th:text="${d.committee}"></span>
+                            <span class="muted" th:unless="${d.committee != null and !#strings.isEmpty(d.committee)}">—</span>
+                        </td>
+                        <td>
+                            <span class="muted" th:if="${d.registrationDate == null}">—</span>
+                            <span th:unless="${d.registrationDate == null}"
+                                  th:text="${#temporals.format(d.registrationDate, 'dd-MM-yyyy')}"></span>
+                        </td>
+                        <td class="col-actions">
+                            <div class="row-actions">
+                                <a th:href="@{/delegates/edit/{id}(id=${d.id})}" class="btn btn-sm btn-edit">
+                                    <svg class="i i-sm"><use href="#i-pencil"/></svg> Edit</a>
+                                <form th:action="@{/delegates/delete/{id}(id=${d.id})}" method="post"
+                                      onsubmit="return confirm('Delete this delegate?');">
+                                    <button type="submit" class="btn btn-sm btn-delete">
+                                        <svg class="i i-sm"><use href="#i-trash"/></svg> Delete</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="no-results" id="delegateNoResults">No delegates match your search.</div>
+            </div>
+
+            <div class="empty" th:if="${#lists.isEmpty(delegates)}">
+                <div class="empty-icon"><svg class="i"><use href="#i-users"/></svg></div>
+                <h3>No delegates registered yet</h3>
+                <p>Register your first participant to get started.</p>
+                <a th:href="@{/delegates/new}" class="btn btn-primary">
+                    <svg class="i i-sm"><use href="#i-plus"/></svg> Register First Delegate</a>
+            </div>
+        </div>
+
+        <div class="footer-text">MUN Manager · Delegation Management System</div>
+    </main>
+</div>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>
+
